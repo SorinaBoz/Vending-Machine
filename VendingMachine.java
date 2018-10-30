@@ -29,21 +29,12 @@ public class VendingMachine {
         }
     }
 
-    public void chooseCoins() {
-        System.out.println("Alege bancnota cu care platesti. Tasteaza codul corespunzator si apoi tasteaza 0 pentru a finaliza plata");
-        System.out.println("Cod\tBancnota");
-        for (Coin coins : coinStock.keySet()) {
-            System.out.println(coins.getIndex() + "\t" + coins.getCurrencyName() + "\t" + coins.getCoin());
-            Scanner scanner = new Scanner(System.in);
-            int choice = scanner.nextInt();
-        }
-
-    }
 
     public void buyProduct() {
         System.out.println("Pentru a alege un produs, tasteaza codul corespunzator. Pentru a renunta, tasteaza 0");
         Scanner scanner = new Scanner(System.in);
         int option = scanner.nextInt();
+        int change;
         if (option == 0) {
             System.exit(0);
         }
@@ -51,6 +42,7 @@ public class VendingMachine {
 
             if (p.getCod() == option) {
                 Integer quantity = productStock.get(p);
+                int price = p.getPrice();
                 if (quantity > 0) {
                     productStock.put(p, quantity - 1);
                     //Task 5: Se livreaza produsul utilizatorului si se afiseaza un mesaj corespunzator “Ati achizionat produsul: ceai”.
@@ -58,9 +50,30 @@ public class VendingMachine {
                 } else {
                     System.out.println("Nu sunt produse suficiente");
                 }
+                System.out.println("Cod\tBancnota\tValoare");
+                for (Coin coins : coinStock.keySet()) {
+                    System.out.println(coins.getIndex() + "\t" + coins.getCurrencyName() + "\t" + coins.getCoin());
+                }
+                System.out.println("Alege bancnota cu care platesti. Tasteaza codul corespunzator si apoi tasteaza 0 pentru a finaliza plata");
+                int optionCoin = scanner.nextInt();
+                for(Coin c: coinStock.keySet()){
+                    if(c.getIndex()==optionCoin){
+                        Integer quantityOfCoins = coinStock.get(c);
+                        coinStock.put(c, quantityOfCoins + 1);}
+                        if(price<c.getCoin()){
+                            price = c.getCoin()- price;
+                            System.out.println("Restul tau este de " + price + " " + currency);
+                    } else if(price>c.getCoin()){
+                            price = price - c.getCoin();
+                            System.out.println("Restul tau este " + price + " " + currency);
+                        }
+
+                }
 
             }
+
         }
+
     }
 
     //porneste vending machine
@@ -68,7 +81,6 @@ public class VendingMachine {
         while (true) {
             this.displayMenu();
             this.buyProduct();
-            this.chooseCoins();
         }
     }
 
@@ -90,7 +102,7 @@ public class VendingMachine {
         currency = Currency.valueOf(lines.get(1));
         numberOfProducts = Integer.valueOf(lines.get(2));
         productStock = new LinkedHashMap<>();
-        coinStock = new HashMap<>();
+        coinStock = new LinkedHashMap<>();
         for (int i = 3; i < lines.size(); i++) {
             String line = lines.get( i );
             String[] parts = line.split( " " );
