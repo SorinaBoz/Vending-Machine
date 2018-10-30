@@ -34,7 +34,6 @@ public class VendingMachine {
         System.out.println("Pentru a alege un produs, tasteaza codul corespunzator. Pentru a renunta, tasteaza 0");
         Scanner scanner = new Scanner(System.in);
         int option = scanner.nextInt();
-        int change;
         if (option == 0) {
             System.exit(0);
         }
@@ -57,6 +56,9 @@ public class VendingMachine {
                 System.out.println("Alege bancnota cu care platesti. Tasteaza codul corespunzator si apoi tasteaza 0 pentru a finaliza plata");
                 int optionCoin = scanner.nextInt();
                 for(Coin c: coinStock.keySet()){
+
+                    //atunci cand aleg o moneda cu index 103, getIndex imi returneaza moneda cu index 101. Nu inteleg de ce
+
                     if(c.getIndex()==optionCoin){
                         Integer quantityOfCoins = coinStock.get(c);
                         coinStock.put(c, quantityOfCoins + 1);}
